@@ -1,6 +1,7 @@
 # FastJson
 **Note:** This is a learning project, I was fascinated by the performance benefits SIMD was able to gain while processing large json inputs in python and go's sonic, so I thought to myself why not just make one for Dart. It did cross my mind to write a pure Dart SIMD JSON parser but we're all about the performance benefits here :) \
-Nevertheless, it was a fun project I worked on with Claude and although I might say this isn't ready for prod, you may find a way to work around it. Thanks.
+Nevertheless, it was a fun project I worked on with Claude and although I might say this isn't ready for prod, you may find a way to work around it. Thanks. \
+And yes I know it currently doesn't use SIMD but rather some clever bitwise ops, I'm working on that :(
 
 A high-performance JSON parser for Dart, powered by Rust with SIMD acceleration.
 
