@@ -1,0 +1,28 @@
+{
+  "roots": [
+    "fast_json"
+  ],
+  "packages": [
+    {
+      "name": "fast_json",
+      "version": "0.1.0",
+      "dependencies": [
+        "ffi"
+      ],
+      "devDependencies": [
+        "lints"
+      ]
+    },
+    {
+      "name": "lints",
+      "version": "3.0.0",
+      "dependencies": []
+    },
+    {
+      "name": "ffi",
+      "version": "2.2.0",
+      "dependencies": []
+    }
+  ],
+  "configVersion": 1
+}
