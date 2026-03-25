@@ -17,7 +17,8 @@ void benchmark1MB({bool dumpFiles = false}) {
   final payload =
       _generatePayload(1024 * 1024, '1mb_benchmark.json', dumpFiles);
   print('=== 1 MB Payload Benchmark ===');
-  _runBenchmark('FastJson', payload);
+  _runBenchmark('FastJson (scalar)', payload, useSimd: false);
+  _runBenchmark('FastJson (SIMD)', payload, useSimd: true);
   _runBenchmark('dart:convert', payload);
   print('');
 }
@@ -26,27 +27,30 @@ void benchmark10MB({bool dumpFiles = false}) {
   final payload =
       _generatePayload(10 * 1024 * 1024, '10mb_benchmark.json', dumpFiles);
   print('=== 10 MB Payload Benchmark ===');
-  _runBenchmark('FastJson', payload);
+  _runBenchmark('FastJson (scalar)', payload, useSimd: false);
+  _runBenchmark('FastJson (SIMD)', payload, useSimd: true);
   _runBenchmark('dart:convert', payload);
   print('');
 }
 
 void benchmark50MB({bool dumpFiles = false}) {
-  final payload = _generatePayload(50 * 1024 * 1024, '50mb_benchmark.json', false);
+  final payload =
+      _generatePayload(50 * 1024 * 1024, '50mb_benchmark.json', false);
   print('=== 50 MB Payload Benchmark ===');
-  _runBenchmark('FastJson', payload);
+  _runBenchmark('FastJson (scalar)', payload, useSimd: false);
+  _runBenchmark('FastJson (SIMD)', payload, useSimd: true);
   _runBenchmark('dart:convert', payload);
 }
 
-void _runBenchmark(String name, Uint8List payload) {
+void _runBenchmark(String name, Uint8List payload, {bool useSimd = false}) {
   final iterations = 10;
   final sw = Stopwatch()..start();
   for (var i = 0; i < iterations; i++) {
-    if (name == 'FastJson') {
-      final doc = FastJson.parse(payload);
-      doc?.dispose();
-    } else {
+    if (name == 'dart:convert') {
       jsonDecode(utf8.decode(payload));
+    } else {
+      final doc = FastJson.parse(payload, useSimd: useSimd);
+      doc?.dispose();
     }
   }
   sw.stop();

@@ -72,6 +72,10 @@ typedef _FjParseNative = Int32 Function(
     Pointer<Uint8> ptr, IntPtr len, Pointer<Pointer<Void>> out);
 typedef _FjParse = int Function(
     Pointer<Uint8> ptr, int len, Pointer<Pointer<Void>> out);
+typedef _FjParseSimdDef = Int32 Function(
+    Pointer<Uint8> ptr, IntPtr len, Pointer<Pointer<Void>> out);
+typedef _FjParseSimd = int Function(
+    Pointer<Uint8> ptr, int len, Pointer<Pointer<Void>> out);
 
 /// Free a previously parsed tape handle.
 ///
@@ -188,6 +192,10 @@ final fjParse = _lib
     .lookup<NativeFunction<_FjParseNative>>('fj_parse')
     .asFunction<_FjParse>();
 
+final fjParseSimd = _lib
+    .lookup<NativeFunction<_FjParseSimdDef>>('fj_parse_simd')
+    .asFunction<_FjParseSimd>();
+
 final fjFree =
     _lib.lookup<NativeFunction<_FjFreeNative>>('fj_free').asFunction<_FjFree>();
 
@@ -288,7 +296,7 @@ class NativeTape {
   /// Temporary allocation is freed after parsing.
   ///
   /// Returns null on parse failure.
-  static NativeTape? parse(Uint8List bytes) {
+  static NativeTape? parse(Uint8List bytes, {bool useSimd = false}) {
     final out = calloc<Pointer<Void>>(sizeOf<Pointer<Void>>());
     try {
       final bytesPtr = calloc<Uint8>(bytes.length);
@@ -296,7 +304,9 @@ class NativeTape {
         for (var i = 0; i < bytes.length; i++) {
           bytesPtr[i] = bytes[i];
         }
-        final err = fjParse(bytesPtr, bytes.length, out);
+        final err = useSimd
+            ? fjParseSimd(bytesPtr, bytes.length, out)
+            : fjParse(bytesPtr, bytes.length, out);
         if (err != FjError.ok.value) return null;
         final h = out.value;
         if (h == _nullptr) return null;

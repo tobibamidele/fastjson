@@ -54,8 +54,8 @@ import 'models.dart';
 class FastJson {
   FastJson._();
 
-  static FjDocument? parse(Uint8List bytes) {
-    final tape = NativeTape.parse(bytes);
+  static FjDocument? parse(Uint8List bytes, {bool useSimd = false}) {
+    final tape = NativeTape.parse(bytes, useSimd: useSimd);
     if (tape == null) return null;
     return FjDocument(tape);
   }
